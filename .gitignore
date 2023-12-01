@@ -1,0 +1,88 @@
+# Advent Of Code input
+input
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+input.txt
+
+*.db
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.dll
+*.bin
+*.ncrunchproject
+
+# --- files ---
+# general file-types
+*.lib
+*.sbr
+*.suo
+*.sln.docstates
+*.nupkg
+*.ide
+*.g.cs
+*.twz
+*.psess
+*.vsp
+*.ncrunchsolution
+
+# specific files
+/Build.proj
+
+# --- directories ---
+# general directories
+bin
+obj
+deploy
+_output
+
+# Visual Studio 2015+ cache/options directories
+.vs
+.vscode
+
+# SonarQube directories
+.sonarqube
+
+# NDepend directories
+NDependOut
+
+# NCrunch directories
+.ncrunchcache
+
+# IntelliJ/Rider/ReSharper directories
+_ReSharper*
+.idea
+builds
+
+# old project-format directories
+packages
+!packages/repositories.config
+
