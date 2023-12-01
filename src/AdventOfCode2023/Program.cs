@@ -46,10 +46,10 @@ void SolvePart(int partNumber, int puzzleNumber, string expectedExampleResult, F
     SolveExample(contentsExample, expectedExampleResult, solver);
     
     // INPUT
-    var inputFile = $"Input/input{puzzleNumber}_{partNumber}.txt";
+    var inputFile = $"Input/input{puzzleNumber}.txt";
     if (!File.Exists(inputFile))
     {
-        Console.Error.WriteLine($"Could not find input file for part {partNumber}");
+        Console.Error.WriteLine("Could not find input file");
         Environment.Exit(420);
     }
     
@@ -83,7 +83,7 @@ void SolveInput(IEnumerable<string> fileContents, Func<IEnumerable<string>, stri
     
     var result = solver.Invoke(fileContents);
     
-    Console.WriteLine($"✨ Got following Result: {result} ✨");
+    Console.WriteLine($"Got following Result: {result}");
 }
 
 IEnumerable<PuzzleDto> GetPuzzles()
