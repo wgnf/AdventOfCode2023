@@ -32,7 +32,7 @@ void SolvePuzzle(int puzzleNumber, IPuzzle puzzle)
 
 void SolvePart(int partNumber, int puzzleNumber, string expectedExampleResult, Func<IEnumerable<string>, string> solver)
 {
-    Console.WriteLine($"=== PART {partNumber} ===");
+    Console.WriteLine($"\n\n=== PART {partNumber} ===");
     
     //EXAMPLE
     var exampleFile = $"Input/example{puzzleNumber}_{partNumber}.txt";
@@ -59,12 +59,14 @@ void SolvePart(int partNumber, int puzzleNumber, string expectedExampleResult, F
 
 void SolveExample(IEnumerable<string> fileContents, string expectedResult, Func<IEnumerable<string>, string> solver)
 {
-    Console.WriteLine(".. EXAMPLE ..");
+    Console.WriteLine("\n\n.. EXAMPLE ..\n\n");
 
     var result = solver.Invoke(fileContents);
     
+    Console.WriteLine("\n\n===================================================");
     Console.WriteLine($"Expected Result: {expectedResult}");
     Console.WriteLine($"Actual Result:   {result}");
+    Console.WriteLine("===================================================");
     
     if (expectedResult.Equals(result))
     {
@@ -79,11 +81,13 @@ void SolveExample(IEnumerable<string> fileContents, string expectedResult, Func<
 
 void SolveInput(IEnumerable<string> fileContents, Func<IEnumerable<string>, string> solver)
 {
-    Console.WriteLine(".. INPUT ..");
+    Console.WriteLine("\n\n.. INPUT ..\n\n");
     
     var result = solver.Invoke(fileContents);
     
-    Console.WriteLine($"Got following Result: {result}");
+    Console.WriteLine("\n\n===================================================");
+    Console.WriteLine($"Got following Result for INPUT: {result}");
+    Console.WriteLine("===================================================");
 }
 
 IEnumerable<PuzzleDto> GetPuzzles()
