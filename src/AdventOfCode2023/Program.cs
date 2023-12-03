@@ -38,7 +38,7 @@ void SolvePart(int partNumber, int puzzleNumber, string expectedExampleResult, F
     var exampleFile = $"Input/example{puzzleNumber}_{partNumber}.txt";
     if (!File.Exists(exampleFile))
     {
-        Console.Error.WriteLine($"Could not find example file for part {partNumber}");
+        Console.Error.WriteLine($"Could not find example file for part '{partNumber}': '{exampleFile}'");
         Environment.Exit(420);
     }
 
@@ -49,7 +49,7 @@ void SolvePart(int partNumber, int puzzleNumber, string expectedExampleResult, F
     var inputFile = $"Input/input{puzzleNumber}.txt";
     if (!File.Exists(inputFile))
     {
-        Console.Error.WriteLine("Could not find input file");
+        Console.Error.WriteLine($"Could not find input file: '{inputFile}'");
         Environment.Exit(420);
     }
     
