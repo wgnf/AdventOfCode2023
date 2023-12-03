@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2023._2;
 
-[Puzzle(2, "Game Of Colored Cubes")]
+[Puzzle(2, "Day 2: Cube Conundrum")]
 // ReSharper disable once UnusedType.Global
 internal sealed class Puzzle2 : IPuzzle
 {

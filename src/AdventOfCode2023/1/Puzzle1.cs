@@ -2,7 +2,7 @@
 
 namespace AdventOfCode2023._1;
 
-[Puzzle(1, "Art Skills")]
+[Puzzle(1, "Day 1: Trebuchet?!")]
 // ReSharper disable once UnusedType.Global
 public sealed class Puzzle1 : IPuzzle
 {
