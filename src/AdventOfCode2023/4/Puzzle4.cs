@@ -35,22 +35,37 @@ internal sealed class Puzzle4 : IPuzzle
         return winningPointsAll.Sum().ToString();
     }
 
+    private readonly Dictionary<int, int> _countOfEachCard = new();
+    
     public string SolvePart2(IEnumerable<string> fileContents)
     {
+        _countOfEachCard.Clear();
+        
         var originalCards = GetCardsFromFileContent(fileContents);
 
-        var countOfAllCards = new List<int>
+        foreach (var card in originalCards)
         {
-            originalCards.Count,
-        };
+            // just add the initial card
+            _countOfEachCard.Add(card.Number, 1);
+        }
 
-        Parallel.ForEach(originalCards, card =>
+        foreach (var card in originalCards)
         {
-            var count = GetResultingCountOf(card, originalCards);
-            countOfAllCards.Add(count);
-        });
+            var currentCountOfCard = _countOfEachCard.GetValueOrDefault(card.Number);
+            var winCount = card.WinningNumbers.Intersect(card.ActualNumbers).Count();
 
-        return countOfAllCards.Sum().ToString();
+            for (var cardNumber = card.Number + 1; cardNumber <= card.Number + winCount; cardNumber++)
+            {
+                // default should never happen, because we populated the dictionary before already
+                var currentCount = _countOfEachCard.GetValueOrDefault(cardNumber);
+
+                currentCount += currentCountOfCard;
+                _countOfEachCard[cardNumber] = currentCount;
+            }
+        }
+
+        var countOfAll = _countOfEachCard.Sum(count => count.Value);
+        return countOfAll.ToString();
     }
 
     private static List<Card> GetCardsFromFileContent(IEnumerable<string> fileContents)
@@ -91,25 +106,5 @@ internal sealed class Puzzle4 : IPuzzle
         }
 
         return cards;
-    }
-
-    private int GetResultingCountOf(Card card, IReadOnlyCollection<Card> originalCards)
-    {
-        var actualWinningNumbers = card.WinningNumbers.Intersect(card.ActualNumbers).ToList();
-        var wonCards = originalCards
-            .Where(possibleCardToCopy => possibleCardToCopy.Number > card.Number && possibleCardToCopy.Number <= card.Number + actualWinningNumbers.Count)
-            .Select(cardToCopy => cardToCopy.Clone())
-            .ToList();
-        
-        var countOfCard = wonCards.Count;
-
-        foreach (var wonCard in wonCards)
-        {
-            countOfCard += GetResultingCountOf(wonCard, originalCards);
-        }
-        
-        Console.WriteLine($"Determined card number [{card.Number}] to have a resulting count of {countOfCard}");
-
-        return countOfCard;
     }
 }
