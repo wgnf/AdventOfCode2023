@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using AdventOfCode2023;
 
 Console.WriteLine("...::: ADVENT OF CODE 2023 :::...\n");
@@ -61,11 +62,14 @@ void SolveExample(IEnumerable<string> fileContents, string expectedResult, Func<
 {
     Console.WriteLine("\n\n.. EXAMPLE ..\n\n");
 
+    var stopWatch = Stopwatch.StartNew();
     var result = solver.Invoke(fileContents);
+    stopWatch.Stop();
     
     Console.WriteLine("\n\n===================================================");
     Console.WriteLine($"Expected Result: {expectedResult}");
     Console.WriteLine($"Actual Result:   {result}");
+    Console.WriteLine($"Took:            {stopWatch.ElapsedMilliseconds}ms");
     Console.WriteLine("===================================================");
     
     if (expectedResult.Equals(result))
@@ -83,10 +87,13 @@ void SolveInput(IEnumerable<string> fileContents, Func<IEnumerable<string>, stri
 {
     Console.WriteLine("\n\n.. INPUT ..\n\n");
     
+    var stopWatch = Stopwatch.StartNew();
     var result = solver.Invoke(fileContents);
+    stopWatch.Stop();
     
     Console.WriteLine("\n\n===================================================");
     Console.WriteLine($"Got following Result for INPUT: {result}");
+    Console.WriteLine($"Took:                           {stopWatch.ElapsedMilliseconds}ms");
     Console.WriteLine("===================================================");
 }
 
