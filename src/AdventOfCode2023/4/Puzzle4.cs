@@ -1,6 +1,7 @@
 ﻿namespace AdventOfCode2023._4;
 
 [Puzzle(4, "Day 4: Scratchcards")]
+// ReSharper disable once UnusedType.Global
 internal sealed class Puzzle4 : IPuzzle
 {
     public string ExpectedExampleResultPart1 => "13";
@@ -13,7 +14,7 @@ internal sealed class Puzzle4 : IPuzzle
 
         foreach (var card in cards)
         {
-            var actualWinningNumbers = card.ActualNumbers.Where(actualNumber => card.WinningNumbers.Contains(actualNumber)).ToList();
+            var actualWinningNumbers = card.WinningNumbers.Intersect(card.ActualNumbers).ToList();
             if (actualWinningNumbers.Count == 0)
             {
                 continue;
@@ -37,20 +38,19 @@ internal sealed class Puzzle4 : IPuzzle
     public string SolvePart2(IEnumerable<string> fileContents)
     {
         var originalCards = GetCardsFromFileContent(fileContents);
-        var processedCards = new List<Card>(originalCards);
-        bool listHasChanged;
 
-        do
+        var countOfAllCards = new List<int>
         {
-            var (listChanged, newProcessedCards) = ProcessCards(processedCards, originalCards);
+            originalCards.Count,
+        };
 
-            listHasChanged = listChanged;
-            processedCards = newProcessedCards;
-            
-            Console.WriteLine($"Processed card list currently has {processedCards.Count} items");
-        } while (listHasChanged);
+        Parallel.ForEach(originalCards, card =>
+        {
+            var count = GetResultingCountOf(card, originalCards);
+            countOfAllCards.Add(count);
+        });
 
-        return processedCards.Count.ToString();
+        return countOfAllCards.Sum().ToString();
     }
 
     private static List<Card> GetCardsFromFileContent(IEnumerable<string> fileContents)
@@ -93,39 +93,23 @@ internal sealed class Puzzle4 : IPuzzle
         return cards;
     }
 
-    private static (bool, List<Card>) ProcessCards(IReadOnlyCollection<Card> processedCards, IReadOnlyCollection<Card> originalCards)
+    private int GetResultingCountOf(Card card, IReadOnlyCollection<Card> originalCards)
     {
-        var listChanged = false;
-        var newProcessedCards = new List<Card>(processedCards);
+        var actualWinningNumbers = card.WinningNumbers.Intersect(card.ActualNumbers).ToList();
+        var wonCards = originalCards
+            .Where(possibleCardToCopy => possibleCardToCopy.Number > card.Number && possibleCardToCopy.Number <= card.Number + actualWinningNumbers.Count)
+            .Select(cardToCopy => cardToCopy.Clone())
+            .ToList();
         
-        foreach (var card in processedCards)
+        var countOfCard = wonCards.Count;
+
+        foreach (var wonCard in wonCards)
         {
-            if (card.HasBeenProcessed)
-            {
-                continue;
-            }
-            
-            var actualWinningNumbers = card.ActualNumbers.Where(actualNumber => card.WinningNumbers.Contains(actualNumber)).ToList();
-            if (actualWinningNumbers.Count == 0)
-            {
-                card.HasBeenProcessed = true;
-                continue;
-            }
-            
-            Console.WriteLine($"Card number [{card.Number}] has {actualWinningNumbers.Count} matches");
-
-            var cardsToCopy = originalCards
-                .Where(possibleCardToCopy => possibleCardToCopy.Number > card.Number && possibleCardToCopy.Number <= card.Number + actualWinningNumbers.Count)
-                .Select(cardToCopy => cardToCopy.Clone())
-                .ToList();
-            
-            Console.WriteLine($"... thus copying card numbers: {string.Join(", ", cardsToCopy.Select(c => c.Number))}");
-            
-            newProcessedCards.AddRange(cardsToCopy);
-            listChanged = true;
-            card.HasBeenProcessed = true;
+            countOfCard += GetResultingCountOf(wonCard, originalCards);
         }
+        
+        Console.WriteLine($"Determined card number [{card.Number}] to have a resulting count of {countOfCard}");
 
-        return (listChanged, newProcessedCards);
+        return countOfCard;
     }
 }

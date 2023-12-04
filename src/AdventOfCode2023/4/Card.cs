@@ -8,8 +8,6 @@ internal sealed class Card
 
     public List<int> ActualNumbers { get; private init; } = [];
 
-    public bool HasBeenProcessed { get; set; }
-
     public Card Clone()
     {
         return new Card
@@ -17,7 +15,6 @@ internal sealed class Card
             Number = Number,
             WinningNumbers = WinningNumbers,
             ActualNumbers = ActualNumbers ,
-            HasBeenProcessed = false,
         };
     }
 }
