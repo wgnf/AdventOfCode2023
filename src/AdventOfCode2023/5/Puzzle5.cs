@@ -6,31 +6,27 @@ namespace AdventOfCode2023._5;
 internal sealed class Puzzle5 : IPuzzle
 {
     public string ExpectedExampleResultPart1 => "35";
-    public string ExpectedExampleResultPart2 => "?";
+    public string ExpectedExampleResultPart2 => "46";
     
     public string SolvePart1(IEnumerable<string> fileContents)
     {
-        var almanac = ParseAlmanac(fileContents);
-        var nearestLocation = long.MaxValue;
+        var almanac = ParseAlmanac(fileContents, false);
+        var seedLocations = almanac.GetSeedLocations();
 
-        foreach (var seed in almanac.Seeds)
-        {
-            var seedLocation = GetLocation(seed, almanac);
-            if (seedLocation < nearestLocation)
-            {
-                nearestLocation = seedLocation;
-            }
-        }
-
-        return nearestLocation.ToString();
+        return seedLocations.Min().ToString();
     }
 
     public string SolvePart2(IEnumerable<string> fileContents)
     {
-        return string.Empty;
+        var almanac = ParseAlmanac(fileContents, true);
+        Console.WriteLine("PARSING DONE");
+        
+        var seedLocations = almanac.GetSeedLocations();
+
+        return seedLocations.Min().ToString();
     }
 
-    private static Almanac ParseAlmanac(IEnumerable<string> fileContents)
+    private static Almanac ParseAlmanac(IEnumerable<string> fileContents, bool considerSeedsAsRanged)
     {
         var firstLine = true;
         var almanac = new Almanac();
@@ -45,7 +41,7 @@ internal sealed class Puzzle5 : IPuzzle
             
             if (firstLine)
             {
-                ParsSeeds(line, almanac);
+                ParsSeeds(line, almanac, considerSeedsAsRanged);
                 firstLine = false;
                 continue;
             }
@@ -59,11 +55,11 @@ internal sealed class Puzzle5 : IPuzzle
             ParseMaps(line, currentDestinationList!);
         }
 
-        Console.WriteLine($"ALMANAC:\n{almanac}");
+        // Console.WriteLine($"ALMANAC:\n{almanac}");
         return almanac;
     }
 
-    private static void ParsSeeds(string line, Almanac almanac)
+    private static void ParsSeeds(string line, Almanac almanac, bool considerSeedsAsRanges)
     {
         var lineSplit = line.SplitTrimRemoveEmpty(':');
         if (lineSplit.Length != 2)
@@ -72,20 +68,35 @@ internal sealed class Puzzle5 : IPuzzle
         }
 
         var seedTexts = lineSplit[1].SplitTrimRemoveEmpty(' ');
-        almanac.Seeds.AddRange(seedTexts.Select(long.Parse));
+        
+        if (!considerSeedsAsRanges)
+        {
+            almanac.Seeds.AddRange(seedTexts.Select(long.Parse));   
+        }
+        else
+        {
+            for (var index = 0; index < seedTexts.Length; index += 2)
+            {
+                var rangeStart = long.Parse(seedTexts[index]);
+                var rangeLength = long.Parse(seedTexts[index + 1]);
+
+                var seeds = EnumerableUtils.LongRange(rangeStart, rangeLength);
+                almanac.Seeds.AddRange(seeds);
+            }
+        }
     }
 
     private static List<RangeMap> DetermineDestinationList(string line, Almanac almanac)
     {
         return line switch
         {
-            "seed-to-soil map:" => almanac.SeedToSoilMap,
-            "soil-to-fertilizer map:" => almanac.SoilToFertilizerMap,
-            "fertilizer-to-water map:" => almanac.FertilizerToWaterMap,
-            "water-to-light map:" => almanac.WaterToLightMap,
-            "light-to-temperature map:" => almanac.LightToTemperatureMap,
-            "temperature-to-humidity map:" => almanac.TemperatureToHumidityMap,
-            "humidity-to-location map:" => almanac.HumidityToLocationMap,
+            "seed-to-soil map:" => almanac.SeedToSoilMap.Items,
+            "soil-to-fertilizer map:" => almanac.SoilToFertilizerMap.Items,
+            "fertilizer-to-water map:" => almanac.FertilizerToWaterMap.Items,
+            "water-to-light map:" => almanac.WaterToLightMap.Items,
+            "light-to-temperature map:" => almanac.LightToTemperatureMap.Items,
+            "temperature-to-humidity map:" => almanac.TemperatureToHumidityMap.Items,
+            "humidity-to-location map:" => almanac.HumidityToLocationMap.Items,
             _ => throw new ArgumentOutOfRangeException(nameof(line), line, "Oops unrecognized category"),
         };
     }
@@ -108,10 +119,5 @@ internal sealed class Puzzle5 : IPuzzle
         var sourceRange = new Range(sourceStart, rangeLength);
 
         currentDestinationList.Add(new RangeMap(sourceRange, destinationRange));
-    }
-
-    private static int GetLocation(long seed, Almanac almanac)
-    {
-        return 0;
     }
 }

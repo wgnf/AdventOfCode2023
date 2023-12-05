@@ -13,15 +13,7 @@ internal sealed class Range
     public long Start { get; }
 
     public long Length { get; }
-
-    public IEnumerable<long> GetValues()
-    {
-        for (var value = Start; value < Start + Length; value++)
-        {
-            yield return value;
-        }
-    }
-
+    
     public override string ToString()
     {
         var builder = new StringBuilder();
