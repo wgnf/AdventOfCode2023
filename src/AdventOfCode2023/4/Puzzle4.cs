@@ -35,19 +35,14 @@ internal sealed class Puzzle4 : IPuzzle
         return winningPointsAll.Sum().ToString();
     }
 
-    private readonly Dictionary<int, int> _countOfEachCard = new();
+    private Dictionary<int, int>? _countOfEachCard;
     
     public string SolvePart2(IEnumerable<string> fileContents)
     {
-        _countOfEachCard.Clear();
-        
         var originalCards = GetCardsFromFileContent(fileContents);
 
-        foreach (var card in originalCards)
-        {
-            // just add the initial card
-            _countOfEachCard.Add(card.Number, 1);
-        }
+        // just add each initial card
+        _countOfEachCard = Enumerable.Range(1, originalCards.Count).ToDictionary(key => key, _ => 1);
 
         foreach (var card in originalCards)
         {
