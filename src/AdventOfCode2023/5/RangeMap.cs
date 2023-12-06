@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace AdventOfCode2023._5;
+﻿namespace AdventOfCode2023._5;
 
 internal sealed class RangeMap
 {
@@ -13,14 +11,4 @@ internal sealed class RangeMap
     public Range SourceRange { get; }
 
     public Range DestinationRange { get; }
-
-    public override string ToString()
-    {
-        var builder = new StringBuilder();
-
-        builder.Append($"SOURCE = {SourceRange} ; ");
-        builder.Append($"DESTINATION = {DestinationRange}");
-
-        return builder.ToString();
-    }
 }

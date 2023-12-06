@@ -58,7 +58,6 @@ internal sealed class Puzzle5 : IPuzzle
             ParseMaps(line, currentDestinationList!);
         }
 
-        // Console.WriteLine($"ALMANAC:\n{almanac}");
         return almanac;
     }
 
