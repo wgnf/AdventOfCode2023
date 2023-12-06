@@ -12,21 +12,17 @@ internal sealed class Puzzle5 : IPuzzle
     public string SolvePart1(IEnumerable<string> fileContents)
     {
         var almanac = ParseAlmanac(fileContents, false);
-        var seedLocations = almanac.GetSeedLocations();
+        var closestSeedLocation = almanac.GetClosestSeedLocation();
 
-        return seedLocations.Min().ToString();
+        return closestSeedLocation.ToString();
     }
 
     public string SolvePart2(IEnumerable<string> fileContents)
     {
         var almanac = ParseAlmanac(fileContents, true);
-        Console.WriteLine("PARSING DONE");
+        var closestSeedLocation = almanac.GetClosestSeedLocation();
 
-        return "46";
-        
-        var seedLocations = almanac.GetSeedLocations();
-
-        return seedLocations.Min().ToString();
+        return closestSeedLocation.ToString();
     }
 
     private static Almanac ParseAlmanac(IEnumerable<string> fileContents, bool considerSeedsAsRanged)

@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
-
-namespace AdventOfCode2023._5;
+﻿namespace AdventOfCode2023._5;
 
 internal sealed class Almanac
 {
+    private readonly object _lockObject = new();
+    
     public List<long> Seeds { get; } = [];
 
     public RangeMapSet SeedToSoilMap { get; } = new();
@@ -20,20 +20,13 @@ internal sealed class Almanac
 
     public RangeMapSet HumidityToLocationMap { get; } = new();
 
-    private readonly ConcurrentDictionary<long, long> _seedToLocationMap = new();
-
-    public IEnumerable<long> GetSeedLocations()
+    public long GetClosestSeedLocation()
     {
-        var locations = new ConcurrentBag<long>();
+        var closestLocation = long.MaxValue;
 
         Parallel.ForEach(Seeds, new ParallelOptions { MaxDegreeOfParallelism = 1 }, seed =>
         {
-            if (_seedToLocationMap.TryGetValue(seed, out var location))
-            {
-                Console.WriteLine("CACHE HIT");
-                locations.Add(location);
-                return;
-            }
+            Console.WriteLine($"Calculating location for seed {seed}...");
             
             var soil = SeedToSoilMap.GetMappedValue(seed);
             var fertilizer = SoilToFertilizerMap.GetMappedValue(soil);
@@ -41,12 +34,19 @@ internal sealed class Almanac
             var light = WaterToLightMap.GetMappedValue(water);
             var temperature = LightToTemperatureMap.GetMappedValue(light);
             var humidity = TemperatureToHumidityMap.GetMappedValue(temperature);
-            location = HumidityToLocationMap.GetMappedValue(humidity);
+            var location = HumidityToLocationMap.GetMappedValue(humidity);
 
-            _seedToLocationMap.TryAdd(seed, location);
-            locations.Add(location);
+            lock (_lockObject)
+            {
+                if (location > closestLocation)
+                {
+                    return;
+                }
+
+                closestLocation = location;   
+            }
         });
 
-        return locations;
+        return closestLocation;
     }
 }
