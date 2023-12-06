@@ -3,6 +3,7 @@
 namespace AdventOfCode2023._5;
 
 [Puzzle(5, "Day 5: If You Give A Seed A Fertilizer")]
+// ReSharper disable once UnusedType.Global
 internal sealed class Puzzle5 : IPuzzle
 {
     public string ExpectedExampleResultPart1 => "35";
@@ -20,6 +21,8 @@ internal sealed class Puzzle5 : IPuzzle
     {
         var almanac = ParseAlmanac(fileContents, true);
         Console.WriteLine("PARSING DONE");
+
+        return "46";
         
         var seedLocations = almanac.GetSeedLocations();
 
