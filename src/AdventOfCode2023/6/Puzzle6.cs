@@ -16,7 +16,7 @@ internal sealed class Puzzle6 : IPuzzle
         var numberOfWaysToWinPerRace = new List<int>();
         foreach (var race in raceConfig.Races)
         {
-            var numberOfWaysToWin = race.GetButtonHoldsToWin().Count();
+            var numberOfWaysToWin = race.GetNumberOfWaysToWin();
             numberOfWaysToWinPerRace.Add(numberOfWaysToWin);
         }
 
@@ -28,7 +28,7 @@ internal sealed class Puzzle6 : IPuzzle
     {
         var raceConfig = ParseInput(fileContents, true);
 
-        var waysToWin = raceConfig.Races[0].GetButtonHoldsToWin().Count();
+        var waysToWin = raceConfig.Races[0].GetNumberOfWaysToWin();
 
         return waysToWin.ToString();
     }

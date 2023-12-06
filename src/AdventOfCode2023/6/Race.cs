@@ -6,10 +6,9 @@ internal sealed class Race
 
     public long RecordDistance { get; set; }
 
-    public IEnumerable<long> GetButtonHoldsToWin()
+    public int GetNumberOfWaysToWin()
     {
-        var waysToWin = new List<long>();
-
+        var waysToWin = 0;
         for (var buttonHoldTime = 0; buttonHoldTime < MaxTime; buttonHoldTime++)
         {
             var speed = buttonHoldTime;
@@ -18,10 +17,10 @@ internal sealed class Race
 
             if (distance > RecordDistance)
             {
-                waysToWin.Add(buttonHoldTime);
+                waysToWin++;
             }
             // when we already found ways to win, but did not find a new way to win, we can be sure that we won't find any more ways to win
-            else if (waysToWin.Count != 0)
+            else if (waysToWin != 0)
             {
                 break;
             }
