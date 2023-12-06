@@ -7,14 +7,4 @@ internal sealed class Card
     public List<int> WinningNumbers { get; private init; } = [];
 
     public List<int> ActualNumbers { get; private init; } = [];
-
-    public Card Clone()
-    {
-        return new Card
-        {
-            Number = Number,
-            WinningNumbers = WinningNumbers,
-            ActualNumbers = ActualNumbers ,
-        };
-    }
 }
