@@ -11,4 +11,6 @@ public sealed class Range
     public long Start { get; }
 
     public long Length { get; }
+
+    public long End => Start + Length - 1;
 }

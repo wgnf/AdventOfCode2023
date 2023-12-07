@@ -47,32 +47,22 @@ public sealed class RangeMapSet
         newUnMigratedRanges = [];
         migratedRanges = [];
 
-        // calculations...
-        var givenRangeStart = range.Start;
-        var givenRangeEnd = range.Start + range.Length;
-
         var sourceRange = rangeMap.SourceRange;
         var destinationRange = rangeMap.DestinationRange;
 
-        var sourceRangeStart = sourceRange.Start;
-        var sourceRangeEnd = sourceRange.Start + sourceRange.Length;
-
-        var destinationRangeStart = destinationRange.Start;
-        var destinationRangeEnd = destinationRange.Start + destinationRange.Length;
-
         // when the given range does not fit anywhere into the source-range, we cannot migrate it
         // this checks if the given range is partially part of the source-range
-        var isInRangeMap = (sourceRangeStart >= givenRangeStart && sourceRangeStart <= givenRangeEnd) ||
-                           (sourceRangeEnd >= givenRangeStart && sourceRangeEnd <= givenRangeEnd) ||
-                           (givenRangeStart >= sourceRangeStart && givenRangeStart <= sourceRangeEnd) ||
-                           (givenRangeEnd >= sourceRangeStart && givenRangeEnd <= sourceRangeEnd);
+        var isInRangeMap = (sourceRange.Start >= range.Start && sourceRange.Start <= range.End) ||
+                           (sourceRange.End >= range.Start && sourceRange.End <= range.End) ||
+                           (range.Start >= sourceRange.Start && range.Start <= sourceRange.End) ||
+                           (range.End >= sourceRange.Start && range.End <= sourceRange.End);
         if (!isInRangeMap)
         {
             return false;
         }
 
-        var givenRangeStartOffset = givenRangeStart - sourceRangeStart;
-        var givenRangeEndOffset = givenRangeEnd - sourceRangeEnd;
+        var givenRangeStartOffset = range.Start - sourceRange.Start;
+        var givenRangeEndOffset = range.End - sourceRange.End;
 
         // lets check if the given range fits completely into the target range
         if (givenRangeStartOffset == 0 && givenRangeEndOffset == 0)
@@ -83,43 +73,41 @@ public sealed class RangeMapSet
 
         AddMigratedRangeWhenNoCompleteFit(
             migratedRanges, 
-            givenRangeStartOffset, 
-            destinationRangeStart, 
-            givenRangeEndOffset, 
-            destinationRangeEnd);
-
-        ConsiderOverhangFront(newUnMigratedRanges, givenRangeStartOffset, givenRangeStart);
-        ConsiderOverhangBack(newUnMigratedRanges, givenRangeEndOffset, sourceRangeEnd);
+            destinationRange,
+            givenRangeStartOffset,
+            givenRangeEndOffset);
+        
+        ConsiderOverhangFront(newUnMigratedRanges, givenRangeStartOffset, range.Start);
+        ConsiderOverhangBack(newUnMigratedRanges, givenRangeEndOffset, range.End);
 
         return true;
     }
 
     private static void AddMigratedRangeWhenNoCompleteFit(
         List<Range> migratedRanges, 
+        Range destinationRange,
         long givenRangeStartOffset, 
-        long destinationRangeStart, 
-        long givenRangeEndOffset, 
-        long destinationRangeEnd)
+        long givenRangeEndOffset)
     {
         long migratedStart;
         long migratedEnd;
         
         if (givenRangeStartOffset < 0)
         {
-            migratedStart = destinationRangeStart;
+            migratedStart = destinationRange.Start;
         }
         else
         {
-            migratedStart = destinationRangeStart + givenRangeStartOffset;
+            migratedStart = destinationRange.Start + givenRangeStartOffset;
         }
 
         if (givenRangeEndOffset > 0)
         {
-            migratedEnd = destinationRangeEnd;
+            migratedEnd = destinationRange.End;
         }
         else
         {
-            migratedEnd = destinationRangeEnd + givenRangeEndOffset;
+            migratedEnd = destinationRange.End + givenRangeEndOffset;
         }
 
         var migratedLength = migratedEnd - migratedStart;
