@@ -69,7 +69,12 @@ internal sealed class Puzzle5 : IPuzzle
         
         if (!considerSeedsAsRanges)
         {
-            almanac.Seeds.AddRange(seedTexts.Select(long.Parse));   
+            foreach (var seedText in seedTexts)
+            {
+                var start = long.Parse(seedText);
+                var seedRange = new Range(start, 1);
+                almanac.SeedRanges.Add(seedRange);
+            }   
         }
         else
         {
@@ -78,8 +83,8 @@ internal sealed class Puzzle5 : IPuzzle
                 var rangeStart = long.Parse(seedTexts[index]);
                 var rangeLength = long.Parse(seedTexts[index + 1]);
 
-                var seeds = EnumerableUtils.LongRange(rangeStart, rangeLength);
-                almanac.Seeds.AddRange(seeds);
+                var seedRange = new Range(rangeStart, rangeLength);
+                almanac.SeedRanges.Add(seedRange);
             }
         }
     }

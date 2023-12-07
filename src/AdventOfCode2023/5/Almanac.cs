@@ -2,9 +2,7 @@
 
 internal sealed class Almanac
 {
-    private readonly object _lockObject = new();
-    
-    public List<long> Seeds { get; } = [];
+    public List<Range> SeedRanges { get; } = [];
 
     public RangeMapSet SeedToSoilMap { get; } = new();
 
@@ -22,31 +20,20 @@ internal sealed class Almanac
 
     public long GetClosestSeedLocation()
     {
-        var closestLocation = long.MaxValue;
+        var soilRanges = SeedToSoilMap.GetRanges(SeedRanges);
+        var fertilizerRanges = SoilToFertilizerMap.GetRanges(soilRanges);
+        var waterRanges = FertilizerToWaterMap.GetRanges(fertilizerRanges);
+        var lightRanges = WaterToLightMap.GetRanges(waterRanges);
+        var temperatureRanges = LightToTemperatureMap.GetRanges(lightRanges);
+        var humidityRanges = TemperatureToHumidityMap.GetRanges(temperatureRanges);
+        var locationRanges = HumidityToLocationMap.GetRanges(humidityRanges);
 
-        Parallel.ForEach(Seeds, new ParallelOptions { MaxDegreeOfParallelism = 1 }, seed =>
+        var closestLocationRange = locationRanges.MinBy(range => range.Start);
+        if (closestLocationRange == null)
         {
-            Console.WriteLine($"Calculating location for seed {seed}...");
-            
-            var soil = SeedToSoilMap.GetMappedValue(seed);
-            var fertilizer = SoilToFertilizerMap.GetMappedValue(soil);
-            var water = FertilizerToWaterMap.GetMappedValue(fertilizer);
-            var light = WaterToLightMap.GetMappedValue(water);
-            var temperature = LightToTemperatureMap.GetMappedValue(light);
-            var humidity = TemperatureToHumidityMap.GetMappedValue(temperature);
-            var location = HumidityToLocationMap.GetMappedValue(humidity);
+            throw new InvalidOperationException("Unable to find closest location range");
+        }
 
-            lock (_lockObject)
-            {
-                if (location > closestLocation)
-                {
-                    return;
-                }
-
-                closestLocation = location;   
-            }
-        });
-
-        return closestLocation;
+        return closestLocationRange.Start;
     }
 }

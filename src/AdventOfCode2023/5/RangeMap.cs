@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode2023._5;
 
-internal sealed class RangeMap
+public sealed class RangeMap
 {
     public RangeMap(Range sourceRange, Range destinationRange)
     {
