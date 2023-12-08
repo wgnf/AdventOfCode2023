@@ -92,21 +92,27 @@ public sealed class RangeMapSet
         long migratedStart;
         long migratedEnd;
         
-        if (givenRangeStartOffset < 0)
+        // when the given range starts in front of or at the source-range start ...
+        if (givenRangeStartOffset <= 0)
         {
+            // ... the migrated-range has to start at the exact start of the destination-range
             migratedStart = destinationRange.Start;
         }
         else
         {
+            // ... else the migrated-range has to start at an offset (from the start) inside the destination-range
             migratedStart = destinationRange.Start + givenRangeStartOffset;
         }
 
-        if (givenRangeEndOffset > 0)
+        // when the given range starts behind of or at the source-range end ...
+        if (givenRangeEndOffset >= 0)
         {
+            // ... the migrated-range has to start at the exact end of the destination-range
             migratedEnd = destinationRange.End;
         }
         else
         {
+            // ... else the migrated-range has to end at an offset (from the end) inside the destination-range
             migratedEnd = destinationRange.End + givenRangeEndOffset;
         }
 
