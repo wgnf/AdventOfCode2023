@@ -110,9 +110,7 @@ public sealed class RangeMapSet
             migratedEnd = destinationRange.End + givenRangeEndOffset;
         }
 
-        var migratedLength = migratedEnd - migratedStart;
-        
-        var migratedRange = new Range(migratedStart, migratedLength);
+        var migratedRange = Range.FromEnd(migratedStart, migratedEnd);
         migratedRanges.Add(migratedRange);
     }
 
@@ -129,9 +127,9 @@ public sealed class RangeMapSet
 
         var overhangFrontStart = givenRangeStart;
         var overhangFrontEnd = givenRangeStart - givenRangeStartOffset - 1;
-        var overhandFrontLength = overhangFrontEnd - overhangFrontStart;
+        var overhangFrontRange = Range.FromEnd(overhangFrontStart, overhangFrontEnd);
             
-        newUnMigratedRanges.Add(new Range(overhangFrontStart, overhandFrontLength));
+        newUnMigratedRanges.Add(overhangFrontRange);
     }
 
     private static void ConsiderOverhangBack(
@@ -146,10 +144,9 @@ public sealed class RangeMapSet
         }
 
         var overhangBackStart = sourceRangeEnd + 1;
-        // offset should be negative in all cases
         var overhangBackEnd = sourceRangeEnd + givenRangeEndOffset;
-        var overhangBackLength = overhangBackEnd - overhangBackStart;
-            
-        newUnMigratedRanges.Add(new Range(overhangBackStart, overhangBackLength));
+        var overhangBackRange = Range.FromEnd(overhangBackStart, overhangBackEnd);
+        
+        newUnMigratedRanges.Add(overhangBackRange);
     }
 }

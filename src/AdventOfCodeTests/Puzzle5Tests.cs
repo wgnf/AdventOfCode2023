@@ -10,10 +10,10 @@ public sealed class Puzzle5Tests
     [Fact]
     public void RangeMap_Handles_Overhang_Front()
     {
-        var inputRange = new Range(100, 100);
+        var inputRange = Range.FromLength(100, 100);
 
-        var rangeMapSource = new Range(150, 50);
-        var rangeMapDestination = new Range(200, 50);
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
         var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
         var rangeMapSet = new RangeMapSet
         {
@@ -28,9 +28,9 @@ public sealed class Puzzle5Tests
         result
             .Should()
             .Contain(range => range.Start == 100 &&
-                              range.Length == 49);
+                              range.Length == 50);
         
-        // 200 - 250 -> migrated to destination
+        // 200 - 249 -> migrated to destination
         result
             .Should()
             .Contain(range => range.Start == 200 &&
@@ -40,10 +40,10 @@ public sealed class Puzzle5Tests
     [Fact]
     public void RangeMap_Handles_Overhang_Back()
     {
-        var inputRange = new Range(150, 100);
+        var inputRange = Range.FromLength(150, 100);
 
-        var rangeMapSource = new Range(150, 50);
-        var rangeMapDestination = new Range(200, 50);
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
         var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
         var rangeMapSet = new RangeMapSet
         {
@@ -54,13 +54,13 @@ public sealed class Puzzle5Tests
             .GetRanges(new[] { inputRange })
             .ToList();
 
-        // 201 - 250 -> overhang back
+        // 200 - 249 -> overhang back
         result
             .Should()
-            .Contain(range => range.Start == 201 &&
-                              range.Length == 49);
+            .Contain(range => range.Start == 200 &&
+                              range.Length == 50);
         
-        // 200 - 250 -> migrated to destination
+        // 200 - 249 -> migrated to destination
         result
             .Should()
             .Contain(range => range.Start == 200 &&
@@ -70,10 +70,10 @@ public sealed class Puzzle5Tests
     [Fact]
     public void RangeMap_Handles_Overhang_Front_And_Back()
     {
-        var inputRange = new Range(100, 150);
+        var inputRange = Range.FromLength(100, 150);
 
-        var rangeMapSource = new Range(150, 50);
-        var rangeMapDestination = new Range(200, 50);
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
         var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
         var rangeMapSet = new RangeMapSet
         {
@@ -88,15 +88,15 @@ public sealed class Puzzle5Tests
         result
             .Should()
             .Contain(range => range.Start == 100 &&
-                              range.Length == 49);
+                              range.Length == 50);
 
-        // 201 - 250 -> overhang back
+        // 200 - 249 -> overhang back
         result
             .Should()
-            .Contain(range => range.Start == 201 &&
-                              range.Length == 49);
+            .Contain(range => range.Start == 200 &&
+                              range.Length == 50);
         
-        // 200 - 250 -> migrated to destination
+        // 200 - 249 -> migrated to destination
         result
             .Should()
             .Contain(range => range.Start == 200 &&
@@ -106,10 +106,10 @@ public sealed class Puzzle5Tests
     [Fact]
     public void RangeMap_Handles_Not_In_Range()
     {
-        var inputRange = new Range(250, 100);
+        var inputRange = Range.FromLength(250, 100);
 
-        var rangeMapSource = new Range(150, 50);
-        var rangeMapDestination = new Range(200, 50);
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
         var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
         var rangeMapSet = new RangeMapSet
         {
@@ -130,10 +130,10 @@ public sealed class Puzzle5Tests
     [Fact]
     public void RangeMap_Handles_Range_Completely_In_Source()
     {
-        var inputRange = new Range(150, 50);
+        var inputRange = Range.FromLength(150, 50);
 
-        var rangeMapSource = new Range(150, 50);
-        var rangeMapDestination = new Range(200, 50);
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
         var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
         var rangeMapSet = new RangeMapSet
         {
@@ -154,10 +154,10 @@ public sealed class Puzzle5Tests
     [Fact]
     public void RangeMap_Handles_Range_Partly_In_Source()
     {
-        var inputRange = new Range(175, 10);
+        var inputRange = Range.FromLength(175, 10);
 
-        var rangeMapSource = new Range(150, 50);
-        var rangeMapDestination = new Range(200, 50);
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
         var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
         var rangeMapSet = new RangeMapSet
         {

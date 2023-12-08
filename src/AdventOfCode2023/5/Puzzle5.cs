@@ -72,7 +72,7 @@ internal sealed class Puzzle5 : IPuzzle
             foreach (var seedText in seedTexts)
             {
                 var start = long.Parse(seedText);
-                var seedRange = new Range(start, 1);
+                var seedRange = Range.FromLength(start, 1);
                 almanac.SeedRanges.Add(seedRange);
             }   
         }
@@ -83,7 +83,7 @@ internal sealed class Puzzle5 : IPuzzle
                 var rangeStart = long.Parse(seedTexts[index]);
                 var rangeLength = long.Parse(seedTexts[index + 1]);
 
-                var seedRange = new Range(rangeStart, rangeLength);
+                var seedRange = Range.FromLength(rangeStart, rangeLength);
                 almanac.SeedRanges.Add(seedRange);
             }
         }
@@ -118,8 +118,8 @@ internal sealed class Puzzle5 : IPuzzle
         var sourceStart = long.Parse(lineSplit[1]);
         var rangeLength = long.Parse(lineSplit[2]);
 
-        var destinationRange = new Range(destinationStart, rangeLength);
-        var sourceRange = new Range(sourceStart, rangeLength);
+        var destinationRange = Range.FromLength(destinationStart, rangeLength);
+        var sourceRange = Range.FromLength(sourceStart, rangeLength);
 
         currentDestinationList.Add(new RangeMap(sourceRange, destinationRange));
     }

@@ -2,7 +2,18 @@
 
 public sealed class Range
 {
-    public Range(long start, long length)
+    public static Range FromLength(long start, long length)
+    {
+        return new Range(start, length);
+    }
+
+    public static Range FromEnd(long start, long end)
+    {
+        var length = end - start + 1;
+        return new Range(start, length);
+    }
+    
+    private Range(long start, long length)
     {
         Start = start;
         Length = length;
