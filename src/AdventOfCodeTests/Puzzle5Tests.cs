@@ -104,7 +104,31 @@ public sealed class Puzzle5Tests
     }
     
     [Fact]
-    public void RangeMap_Handles_Not_In_Range()
+    public void RangeMap_Handles_Not_In_Range_Front()
+    {
+        var inputRange = Range.FromLength(50, 50);
+
+        var rangeMapSource = Range.FromLength(150, 50);
+        var rangeMapDestination = Range.FromLength(200, 50);
+        var rangeMap = new RangeMap(rangeMapSource, rangeMapDestination);
+        var rangeMapSet = new RangeMapSet
+        {
+            Items = { rangeMap },
+        };
+
+        var result = rangeMapSet
+            .GetRanges(new[] { inputRange })
+            .ToList();
+        
+        // 50 - 99 -> not migrated because not in range
+        result
+            .Should()
+            .OnlyContain(range => range.Start == 50 &&
+                                  range.Length == 50);
+    }
+    
+    [Fact]
+    public void RangeMap_Handles_Not_In_Range_Back()
     {
         var inputRange = Range.FromLength(250, 100);
 
@@ -120,7 +144,7 @@ public sealed class Puzzle5Tests
             .GetRanges(new[] { inputRange })
             .ToList();
         
-        // 250 - 350 -> not migrated because not in range
+        // 250 - 349 -> not migrated because not in range
         result
             .Should()
             .OnlyContain(range => range.Start == 250 &&
